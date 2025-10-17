@@ -5,6 +5,7 @@ export interface Product {
   name: string;
   type: ShoppingType;
   quantity: number;
+  checked?: boolean;
 }
 
 export interface ShoppingCategory {

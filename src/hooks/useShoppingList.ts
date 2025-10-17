@@ -23,6 +23,12 @@ export const useShoppingList = () => {
     );
   };
 
+  const toggleChecked = (productId: string) => {
+    setProducts(prev =>
+      prev.map(p => (p.id === productId ? { ...p, checked: !p.checked } : p))
+    );
+  };
+
   const addProduct = (name: string, type: ShoppingType) => {
     const id = `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     setProducts(prev => [...prev, { id, name, type, quantity: 0 }]);
@@ -57,6 +63,7 @@ export const useShoppingList = () => {
     moveProduct,
     deleteProduct,
     resetQuantities,
+    toggleChecked,
     getProductsByType,
     getSelectedProducts,
   };
