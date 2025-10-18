@@ -3,7 +3,7 @@ export type ShoppingType = 'mensile' | 'bisettimanale' | 'settimanale' | 'trasve
 export interface Product {
   id: string;
   name: string;
-  type: ShoppingType;
+  types: ShoppingType[]; // Changed from single type to array
   quantity: number;
   checked?: boolean;
 }

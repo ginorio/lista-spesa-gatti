@@ -17,7 +17,7 @@ const Summary = () => {
   const { toast } = useToast();
 
   const productsByType = categories.reduce((acc, category) => {
-    const categoryProducts = selectedProducts.filter(p => p.type === category.id);
+    const categoryProducts = selectedProducts.filter(p => p.types.includes(category.id));
     if (categoryProducts.length > 0) {
       acc[category.id] = categoryProducts;
     }
@@ -25,7 +25,7 @@ const Summary = () => {
   }, {} as Record<ShoppingType, typeof selectedProducts>);
 
   // Prodotti trasversali
-  const trasversaliProducts = selectedProducts.filter(p => p.type === 'trasversale');
+  const trasversaliProducts = selectedProducts.filter(p => p.types.includes('trasversale'));
 
   const handleReset = () => {
     if (confirm('Sei sicuro di voler cancellare tutte le quantità?')) {

@@ -29,14 +29,20 @@ export const useShoppingList = () => {
     );
   };
 
-  const addProduct = (name: string, type: ShoppingType) => {
+  const addProduct = (name: string, types: ShoppingType[]) => {
     const id = `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    setProducts(prev => [...prev, { id, name, type, quantity: 0 }]);
+    setProducts(prev => [...prev, { id, name, types, quantity: 0 }]);
+  };
+
+  const updateProduct = (productId: string, name: string, types: ShoppingType[]) => {
+    setProducts(prev =>
+      prev.map(p => (p.id === productId ? { ...p, name, types } : p))
+    );
   };
 
   const moveProduct = (productId: string, newType: ShoppingType) => {
     setProducts(prev =>
-      prev.map(p => (p.id === productId ? { ...p, type: newType } : p))
+      prev.map(p => (p.id === productId ? { ...p, types: [newType] } : p))
     );
   };
 
@@ -49,7 +55,7 @@ export const useShoppingList = () => {
   };
 
   const getProductsByType = (type: ShoppingType) => {
-    return products.filter(p => p.type === type);
+    return products.filter(p => p.types.includes(type));
   };
 
   const getSelectedProducts = () => {
@@ -60,6 +66,7 @@ export const useShoppingList = () => {
     products,
     updateQuantity,
     addProduct,
+    updateProduct,
     moveProduct,
     deleteProduct,
     resetQuantities,
