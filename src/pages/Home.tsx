@@ -10,6 +10,12 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="text-center mb-2">
+          <p className="text-xs text-muted-foreground">
+            v1.0 - {new Date().toLocaleDateString('it-IT')}
+          </p>
+        </div>
+        
         <header className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
             🛒 Lista della Spesa
