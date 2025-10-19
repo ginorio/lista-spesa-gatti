@@ -18,32 +18,32 @@ serve(async (req) => {
       throw new Error('No image provided');
     }
 
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    if (!lovableApiKey) {
+      throw new Error('Lovable API key not configured');
     }
 
-    console.log('Processing image with GPT-5-mini vision');
+    console.log('Processing image with Gemini Flash vision');
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${lovableApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini-2025-08-07',
+        model: 'google/gemini-2.5-flash',
         messages: [
           {
             role: 'system',
-            content: 'Sei un modello OCR specializzato nel riconoscimento di testo scritto a mano in immagini. Leggi attentamente ogni riga di testo presente nell\'immagine e trascrivila fedelmente, senza riassunti, interpretazioni o aggiunta di parole. Mantieni la sequenza originale delle righe dall\'alto verso il basso. Se non riesci a leggere una riga, inserisci una stringa vuota (\'\').Esempio di output atteso: ["Prima riga di testo", "Seconda riga di testo", "Terza riga di testo"]'
+            content: 'Sei un assistente OCR esperto. Leggi il testo scritto a mano nell\'immagine e restituisci SOLO un array JSON con ogni prodotto come stringa. Mantieni l\'ordine dall\'alto verso il basso. Ignora immagini o elementi non testuali.'
           },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'Leggi tutte le righe di testo nell\'immagine e restituisci un array JSON con ogni riga come stringa separata.'
+                text: 'Leggi tutti i prodotti scritti nell\'immagine e restituisci un array JSON. Esempio: ["Prodotto 1", "Prodotto 2"]'
               },
               {
                 type: 'image_url',
@@ -53,19 +53,18 @@ serve(async (req) => {
               }
             ]
           }
-        ],
-        max_completion_tokens: 1000
+        ]
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
-      throw new Error(`OpenAI API error: ${errorText}`);
+      console.error('Lovable AI error:', response.status, errorText);
+      throw new Error(`Lovable AI error: ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI response:', JSON.stringify(data));
+    console.log('Lovable AI response:', JSON.stringify(data));
     
     const content = data.choices[0].message.content;
     
