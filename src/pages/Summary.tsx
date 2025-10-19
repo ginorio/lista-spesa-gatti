@@ -143,11 +143,15 @@ const Summary = () => {
             <CardHeader>
               <CardTitle>Nessun prodotto selezionato</CardTitle>
               <CardDescription>
-                Inizia a selezionare i prodotti per la tua spesa
+                Inizia a selezionare i prodotti per la tua spesa o importali da una foto
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button onClick={() => navigate('/')}>
+            <CardContent className="space-y-3">
+              <PhotoImport 
+                existingProducts={products} 
+                onProductsAdded={() => window.location.reload()} 
+              />
+              <Button onClick={() => navigate('/')} className="w-full">
                 Vai alla selezione
               </Button>
             </CardContent>

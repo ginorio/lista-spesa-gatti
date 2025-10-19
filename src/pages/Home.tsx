@@ -12,7 +12,7 @@ const Home = () => {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="text-center mb-2">
           <p className="text-xs text-muted-foreground">
-            v1.1 - 18/10/2025
+            v1.2 - 18/10/2025
           </p>
         </div>
         
