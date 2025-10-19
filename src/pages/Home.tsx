@@ -12,7 +12,7 @@ const Home = () => {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="text-center mb-2">
           <p className="text-xs text-muted-foreground">
-            v1.0 - {new Date().toLocaleDateString('it-IT')}
+            v1.1 - 18/10/2025
           </p>
         </div>
         

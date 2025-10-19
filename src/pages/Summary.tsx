@@ -9,10 +9,11 @@ import { ArrowLeft, Trash2, Share2, FileDown } from 'lucide-react';
 import { ShoppingType } from '@/types/shopping';
 import { jsPDF } from 'jspdf';
 import { useToast } from '@/hooks/use-toast';
+import { PhotoImport } from '@/components/PhotoImport';
 
 const Summary = () => {
   const navigate = useNavigate();
-  const { getSelectedProducts, resetQuantities, toggleChecked } = useShoppingList();
+  const { getSelectedProducts, resetQuantities, toggleChecked, products } = useShoppingList();
   const selectedProducts = getSelectedProducts();
   const { toast } = useToast();
 
@@ -266,6 +267,11 @@ const Summary = () => {
         </div>
 
         <div className="mt-8 space-y-3">
+          <PhotoImport 
+            existingProducts={products} 
+            onProductsAdded={() => window.location.reload()} 
+          />
+          
           <div className="flex gap-3">
             <Button
               className="flex-1"
