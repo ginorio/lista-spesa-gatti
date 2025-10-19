@@ -1,10 +1,6 @@
 
 <img width="927" height="736" alt="{00A97952-E44B-46CF-A0C4-490A5F997638}" src="https://github.com/user-attachments/assets/1c80e4ee-0ed0-487b-b611-f915e99353d5" />
 
-Here’s the English version of your README.md, clear and professional yet friendly — ideal for open source or portfolio presentation.
-
-
----
 
 Lista Spesa Gatti 🐾
 
