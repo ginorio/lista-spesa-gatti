@@ -17,7 +17,7 @@ local save and persistence,
 WhatsApp share and PDF export,
 
 photo import (OCR) to read printed shopping lists.
-Live demo: sec="http://lista-spesa-gatti.lovable.app".
+Live demo: http://lista-spesa-gatti.lovable.app
 
 
 > Built with React + TypeScript + Vite + Tailwind + shadcn/ui, using lucide-react icons, jsPDF for export, and react-router-dom for navigation.
