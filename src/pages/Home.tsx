@@ -3,9 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { categories } from '@/data/products';
 import { ShoppingCart, Settings } from 'lucide-react';
+import { PhotoImport } from '@/components/PhotoImport';
+import { useShoppingList } from '@/hooks/useShoppingList';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { products } = useShoppingList();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
@@ -62,10 +65,16 @@ const Home = () => {
                 Visualizza tutti i prodotti selezionati
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button className="w-full" variant="outline">
+            <CardContent className="space-y-2">
+              <Button className="w-full" variant="outline" onClick={(e) => { e.stopPropagation(); navigate('/summary'); }}>
                 Vai al Riepilogo
               </Button>
+              <PhotoImport
+                existingProducts={products}
+                onProductsAdded={() => {
+                  navigate('/summary');
+                }}
+              />
             </CardContent>
           </Card>
 
