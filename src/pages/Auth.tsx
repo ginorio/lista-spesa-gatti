@@ -51,7 +51,20 @@ export default function Auth() {
           description: 'Benvenuto!',
         });
       } else {
-        const { error } = await supabase.auth.signUp({
+        // Salva i prodotti dal localStorage prima della registrazione
+        const STORAGE_KEY = 'shopping-list-products';
+        const existingProducts = localStorage.getItem(STORAGE_KEY);
+        let productsToMigrate = null;
+        
+        if (existingProducts) {
+          try {
+            productsToMigrate = JSON.parse(existingProducts);
+          } catch (e) {
+            console.error('Errore nel parsing dei prodotti:', e);
+          }
+        }
+
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -64,10 +77,44 @@ export default function Auth() {
 
         if (error) throw error;
 
-        toast({
-          title: 'Registrazione completata',
-          description: 'Accesso effettuato con successo!',
-        });
+        // Se ci sono prodotti da migrare e l'utente è stato creato
+        if (productsToMigrate && productsToMigrate.length > 0 && data.user) {
+          toast({
+            title: 'Migrazione in corso',
+            description: 'Sto importando i tuoi prodotti...',
+          });
+
+          // Aspetta un momento per assicurarsi che il profilo sia stato creato
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // Importa i prodotti nel database
+          for (const product of productsToMigrate) {
+            try {
+              await supabase.from('user_products').insert({
+                user_id: data.user.id,
+                name: product.name,
+                types: product.types,
+                quantity: product.quantity || 0,
+                checked: product.checked || false,
+              });
+            } catch (err) {
+              console.error('Errore importazione prodotto:', err);
+            }
+          }
+
+          // Cancella il localStorage
+          localStorage.removeItem(STORAGE_KEY);
+
+          toast({
+            title: 'Migrazione completata',
+            description: `${productsToMigrate.length} prodotti importati con successo!`,
+          });
+        } else {
+          toast({
+            title: 'Registrazione completata',
+            description: 'Accesso effettuato con successo!',
+          });
+        }
       }
     } catch (error: any) {
       toast({
