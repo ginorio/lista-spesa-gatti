@@ -14,7 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_products: {
+        Row: {
+          checked: boolean | null
+          created_at: string
+          id: string
+          name: string
+          quantity: number
+          types: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          checked?: boolean | null
+          created_at?: string
+          id?: string
+          name: string
+          quantity?: number
+          types: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          checked?: boolean | null
+          created_at?: string
+          id?: string
+          name?: string
+          quantity?: number
+          types?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_products_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

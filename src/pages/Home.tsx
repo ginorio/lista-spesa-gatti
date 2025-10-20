@@ -2,21 +2,62 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { categories } from '@/data/products';
-import { ShoppingCart, Settings } from 'lucide-react';
+import { ShoppingCart, Settings, LogOut } from 'lucide-react';
 import { PhotoImport } from '@/components/PhotoImport';
 import { useShoppingList } from '@/hooks/useShoppingList';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { products } = useShoppingList();
+  const { products, loading } = useShoppingList();
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: "Disconnesso",
+      description: "Sei stato disconnesso con successo",
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Caricamento...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center mb-2">
-          <p className="text-xs text-muted-foreground">
-            v1.2 - 18/10/2025
-          </p>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex-1" />
+          <div className="text-center flex-1">
+            <p className="text-xs text-muted-foreground">
+              v1.4 - 18/10/2025
+            </p>
+            {user && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {user.email}
+              </p>
+            )}
+          </div>
+          <div className="flex-1 flex justify-end">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignOut}
+              title="Disconnetti"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
         
         <header className="text-center mb-12">

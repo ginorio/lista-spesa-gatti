@@ -36,14 +36,14 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'Sei un assistente OCR esperto. Leggi il testo scritto a mano nell\'immagine e restituisci SOLO un array JSON con ogni prodotto come stringa. Mantieni l\'ordine dall\'alto verso il basso. Ignora immagini o elementi non testuali.'
+            content: 'Sei un assistente OCR esperto specializzato nel riconoscimento di liste della spesa scritte a mano. Il tuo compito è:\n1. Leggere il testo scritto a mano nell\'immagine\n2. Correggere eventuali errori ortografici e ricondurre i prodotti ai loro nomi reali e corretti (es. "Bagnoscihuma" → "Bagnoschiuma", "Flautu" → "Flauti", "Pane in caseta" → "Pane in cassetta")\n3. Restituire SOLO un array JSON con ogni prodotto come stringa\n4. Mantenere l\'ordine dall\'alto verso il basso\n5. Ignorare immagini o elementi non testuali'
           },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'Leggi tutti i prodotti scritti nell\'immagine e restituisci un array JSON. Esempio: ["Prodotto 1", "Prodotto 2"]'
+                text: 'Leggi tutti i prodotti scritti nell\'immagine, correggi gli errori ortografici e normalizza i nomi dei prodotti. Restituisci un array JSON con i nomi corretti. Esempio: ["Bagnoschiuma", "Flauti", "Pane in cassetta"]'
               },
               {
                 type: 'image_url',
