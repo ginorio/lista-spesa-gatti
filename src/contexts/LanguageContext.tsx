@@ -21,10 +21,10 @@ const translations = {
     'home.loading': 'Caricamento...',
     
     // Categories
-    'category.monthly': 'Mensile',
-    'category.biweekly': 'Quindicinale',
-    'category.weekly': 'Settimanale',
-    'category.shared': 'Condivisi',
+    'category.mensile': 'Vai ai Prodotti',
+    'category.bisettimanale': 'Vai ai Prodotti',
+    'category.settimanale': 'Vai ai Prodotti',
+    'category.trasversale': 'Vai ai Prodotti',
     
     // Auth
     'auth.title': 'Lista Spesa Famiglia',
@@ -99,10 +99,10 @@ const translations = {
     'home.loading': 'Loading...',
     
     // Categories
-    'category.monthly': 'Monthly',
-    'category.biweekly': 'Bi-weekly',
-    'category.weekly': 'Weekly',
-    'category.shared': 'Shared',
+    'category.mensile': 'Go to Products',
+    'category.bisettimanale': 'Go to Products',
+    'category.settimanale': 'Go to Products',
+    'category.trasversale': 'Go to Products',
     
     // Auth
     'auth.title': 'Family Shopping List',

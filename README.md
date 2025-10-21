@@ -4,18 +4,19 @@
 <img width="927" height="736" alt="{00A97952-E44B-46CF-A0C4-490A5F997638}" src="https://github.com/user-attachments/assets/1c80e4ee-0ed0-487b-b611-f915e99353d5" />
 
 
-Lista Spesa Famiglia 🛒
+Family Shopping List 🛒
 
 A responsive web app for creating and managing shopping lists by type — monthly, bi-weekly, or weekly — with:
 
 - Quick product selection by category
 - Cross-list products shared across all lists
-- Full product management (add, edit, move, delete with custom names, comments, and locations)
+- Full product management with custom names, comments, and store locations
 - User authentication (Email/Password and Google Sign-In)
-- Cloud sync with Lovable Cloud (Supabase backend)
-- Multi-language support (Italian/English)
+- Cloud database sync via Lovable Cloud
+- Multi-language support (Italian/English with toggle on homepage)
 - WhatsApp share and PDF export
 - Photo import (OCR) to read printed shopping lists
+- Privacy policy integration for user data protection
 
 Live demo: http://lista-spesa-gatti.lovable.app
 
