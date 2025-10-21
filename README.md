@@ -1,7 +1,8 @@
 [![Donate](https://img.shields.io/badge/☕_Support_me_on-PayPal-blue?logo=paypal&logoColor=white)](https://paypal.me/albidrio)
 
 
-<img width="927" height="736" alt="{00A97952-E44B-46CF-A0C4-490A5F997638}" src="https://github.com/user-attachments/assets/1c80e4ee-0ed0-487b-b611-f915e99353d5" />
+<img width="1118" height="854" alt="image" src="https://github.com/user-attachments/assets/346bc70c-d064-4903-abbf-ebb695f1856e" />
+
 
 
 Family Shopping List 🛒
