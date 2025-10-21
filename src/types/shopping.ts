@@ -6,6 +6,9 @@ export interface Product {
   types: ShoppingType[]; // Changed from single type to array
   quantity: number;
   checked?: boolean;
+  custom_name?: string;
+  comment?: string;
+  location?: string;
 }
 
 export interface ShoppingCategory {

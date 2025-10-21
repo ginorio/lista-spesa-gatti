@@ -41,8 +41,11 @@ export type Database = {
       user_products: {
         Row: {
           checked: boolean | null
+          comment: string | null
           created_at: string
+          custom_name: string | null
           id: string
+          location: string | null
           name: string
           quantity: number
           types: string[]
@@ -51,8 +54,11 @@ export type Database = {
         }
         Insert: {
           checked?: boolean | null
+          comment?: string | null
           created_at?: string
+          custom_name?: string | null
           id?: string
+          location?: string | null
           name: string
           quantity?: number
           types: string[]
@@ -61,8 +67,11 @@ export type Database = {
         }
         Update: {
           checked?: boolean | null
+          comment?: string | null
           created_at?: string
+          custom_name?: string | null
           id?: string
+          location?: string | null
           name?: string
           quantity?: number
           types?: string[]

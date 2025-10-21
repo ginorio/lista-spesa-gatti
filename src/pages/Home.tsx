@@ -7,18 +7,21 @@ import { PhotoImport } from '@/components/PhotoImport';
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 const Home = () => {
   const navigate = useNavigate();
   const { products, loading } = useShoppingList();
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSignOut = async () => {
     await signOut();
     toast({
-      title: "Disconnesso",
-      description: "Sei stato disconnesso con successo",
+      title: t('home.signOut'),
+      description: t('home.signOut'),
     });
   };
 
@@ -27,7 +30,7 @@ const Home = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Caricamento...</p>
+          <p className="mt-4 text-muted-foreground">{t('home.loading')}</p>
         </div>
       </div>
     );
@@ -37,10 +40,12 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex-1" />
+          <div className="flex-1">
+            <LanguageToggle />
+          </div>
           <div className="text-center flex-1">
             <p className="text-xs text-muted-foreground">
-              v1.4 - 18/10/2025
+              v1.5 - 21/10/2025
             </p>
             {user && (
               <p className="text-xs text-muted-foreground mt-1">
@@ -53,7 +58,7 @@ const Home = () => {
               variant="ghost"
               size="icon"
               onClick={handleSignOut}
-              title="Disconnetti"
+              title={t('home.signOut')}
             >
               <LogOut className="h-5 w-5" />
             </Button>
@@ -62,11 +67,8 @@ const Home = () => {
         
         <header className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
-            🛒 Lista della Spesa
+            🛒 {t('home.title')}
           </h1>
-          <p className="text-muted-foreground text-lg">
-            Organizza la tua spesa in modo semplice e veloce
-          </p>
         </header>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
@@ -88,7 +90,7 @@ const Home = () => {
                   📍 {category.store}
                 </p>
                 <Button className="w-full" variant="default">
-                  Seleziona Prodotti
+                  {t(`category.${category.id}`)}
                 </Button>
               </CardContent>
             </Card>
@@ -100,15 +102,12 @@ const Home = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
-                Riepilogo Spesa
+                {t('home.summary')}
               </CardTitle>
-              <CardDescription>
-                Visualizza tutti i prodotti selezionati
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <Button className="w-full" variant="outline" onClick={(e) => { e.stopPropagation(); navigate('/summary'); }}>
-                Vai al Riepilogo
+                {t('home.viewSummary')}
               </Button>
               <PhotoImport
                 existingProducts={products}
@@ -123,15 +122,12 @@ const Home = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="h-5 w-5" />
-                Gestisci Prodotti
+                {t('home.manage')}
               </CardTitle>
-              <CardDescription>
-                Aggiungi o sposta prodotti
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <Button className="w-full" variant="outline">
-                Gestisci
+                {t('home.manageProducts')}
               </Button>
             </CardContent>
           </Card>

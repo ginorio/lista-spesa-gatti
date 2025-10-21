@@ -4,21 +4,19 @@
 <img width="927" height="736" alt="{00A97952-E44B-46CF-A0C4-490A5F997638}" src="https://github.com/user-attachments/assets/1c80e4ee-0ed0-487b-b611-f915e99353d5" />
 
 
-Lista Spesa Gatti 🐾
+Lista Spesa Famiglia 🛒
 
 A responsive web app for creating and managing shopping lists by type — monthly, bi-weekly, or weekly — with:
 
-quick product selection by category,
+- Quick product selection by category
+- Cross-list products shared across all lists
+- Full product management (add, edit, move, delete with custom names, comments, and locations)
+- User authentication (Email/Password and Google Sign-In)
+- Cloud sync with Lovable Cloud (Supabase backend)
+- Multi-language support (Italian/English)
+- WhatsApp share and PDF export
+- Photo import (OCR) to read printed shopping lists
 
-cross-list products shared across all lists,
-
-full product management (add, edit, move, delete),
-
-local save and persistence,
-
-WhatsApp share and PDF export,
-
-photo import (OCR) to read printed shopping lists.
 Live demo: http://lista-spesa-gatti.lovable.app
 
 
@@ -47,7 +45,7 @@ Summary – Groups by list, includes cross-list products, allows item check-off,
 Manage – Add new products, bulk move selected items to another list, edit names or assigned lists, or delete.
 
 
-All data is stored in localStorage for simplicity.
+Data is now stored in Lovable Cloud (Supabase) with user authentication and automatic sync.
 
 
 ---
@@ -66,15 +64,34 @@ Each Product may belong to multiple lists (types: ShoppingType[]) and holds quan
 
 Core Features
 
-State management & storage: handled by useShoppingList hook, including update, toggle, add, move, delete, and filters.
+**Authentication & Cloud Sync**: 
+- User authentication with email/password and Google Sign-In
+- Cloud database sync via Lovable Cloud (Supabase)
+- Automatic migration of local data to cloud on first signup
+- Row-Level Security (RLS) for data privacy
 
-PDF export: generated via jsPDF, auto-paginated and grouped by list and shared products.
+**Product Management**: 
+- Add custom names, comments, and locations to products
+- State management handled by useShoppingList hook
+- Update, toggle, add, move, delete operations with cloud persistence
 
-Share: creates a formatted WhatsApp message using URL deep-links.
+**Multi-language Support**:
+- Italian and English translations
+- Language toggle on homepage
+- Default language: Italian
 
-UI: Tailwind + shadcn/ui components with lucide icons and hash-based routing (HashRouter).
+**Export & Share**:
+- PDF export: generated via jsPDF, auto-paginated and grouped by list
+- WhatsApp share: creates formatted messages using URL deep-links
 
-OCR import: PhotoImport component connects to OCR functionality (Gemini API integration hinted by repo topics).
+**UI & Design**:
+- Tailwind + shadcn/ui components with lucide icons
+- Hash-based routing (HashRouter)
+- Responsive design with dark/light mode support
+
+**OCR Import**: 
+- PhotoImport component with Gemini API integration
+- Reads printed shopping lists from photos
 
 
 
@@ -180,6 +197,6 @@ Add your license file (MIT recommended for open projects).
 
 Notes
 
-The app works fully offline using localStorage.
+The app now uses Lovable Cloud (Supabase) for data persistence and user authentication.
 
-Backend integration (Supabase) is optional and can be added later.
+Features include automatic migration from localStorage to cloud storage on first signup.
