@@ -164,8 +164,6 @@ Roadmap
 
 🗄️ Optional Supabase sync (multi-device, user profiles)
 
-🧠 Smarter OCR mapping (“text → product” via fuzzy matching)
-
 🔍 Improved search with synonyms & categories
 
 👥 Multi-user list sharing with permissions
