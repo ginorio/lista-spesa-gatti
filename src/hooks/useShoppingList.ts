@@ -63,13 +63,16 @@ export const useShoppingList = () => {
           });
         }
       } else {
-        const mappedProducts: Product[] = data.map(p => ({
-          id: p.id,
-          name: p.name,
-          types: p.types as ShoppingType[],
-          quantity: p.quantity,
-          checked: p.checked ?? false,
-        }));
+      const mappedProducts: Product[] = data.map(p => ({
+        id: p.id,
+        name: p.name,
+        types: p.types as ShoppingType[],
+        quantity: p.quantity,
+        checked: p.checked ?? false,
+        custom_name: p.custom_name,
+        comment: p.comment,
+        location: p.location,
+      }));
         setProducts(mappedProducts);
       }
     } catch (error: any) {
@@ -96,6 +99,9 @@ export const useShoppingList = () => {
           types: product.types,
           quantity: product.quantity,
           checked: product.checked ?? false,
+          custom_name: product.custom_name,
+          comment: product.comment,
+          location: product.location,
         });
 
       if (error) throw error;
@@ -166,11 +172,11 @@ export const useShoppingList = () => {
     }
   };
 
-  const updateProduct = async (productId: string, name: string, types: ShoppingType[]) => {
+  const updateProduct = async (productId: string, name: string, types: ShoppingType[], custom_name?: string, comment?: string, location?: string) => {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-    const updatedProduct = { ...product, name, types };
+    const updatedProduct = { ...product, name, types, custom_name, comment, location };
     setProducts(prev =>
       prev.map(p => (p.id === productId ? updatedProduct : p))
     );

@@ -80,9 +80,9 @@ const Home = () => {
             >
               <CardHeader>
                 <div className="text-4xl mb-2">{category.icon}</div>
-                <CardTitle className="text-xl">{category.name}</CardTitle>
+                <CardTitle className="text-xl">{t(`category.${category.id}.name`)}</CardTitle>
                 <CardDescription className="text-sm">
-                  {category.description}
+                  {t(`category.${category.id}.description`)}
                 </CardDescription>
               </CardHeader>
               <CardContent>

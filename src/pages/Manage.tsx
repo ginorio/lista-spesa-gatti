@@ -13,10 +13,14 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { BarcodeScanner } from '@/components/BarcodeScanner';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Textarea } from '@/components/ui/textarea';
 
 const Manage = () => {
   const navigate = useNavigate();
   const { products, addProduct, updateProduct, moveProduct, deleteProduct } = useShoppingList();
+  const { t } = useLanguage();
   const [newProductName, setNewProductName] = useState('');
   const [newProductTypes, setNewProductTypes] = useState<ShoppingType[]>(['mensile']);
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,15 +29,41 @@ const Manage = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editName, setEditName] = useState('');
   const [editTypes, setEditTypes] = useState<ShoppingType[]>([]);
+  const [editCustomName, setEditCustomName] = useState('');
+  const [editComment, setEditComment] = useState('');
+  const [editLocation, setEditLocation] = useState('');
+
+  const handleBarcodeDetected = async (barcode: string) => {
+    toast.info(t('manage.fetchingProduct'));
+    try {
+      const response = await fetch(
+        `https://world.openfoodfacts.org/api/v2/product/${barcode}?fields=product_name,brands`
+      );
+      const data = await response.json();
+      
+      if (data.status === 1 && data.product?.product_name) {
+        const productName = data.product.brands 
+          ? `${data.product.brands} - ${data.product.product_name}`
+          : data.product.product_name;
+        setNewProductName(productName);
+        toast.success(`${t('manage.productAdded')}: ${productName}`);
+      } else {
+        toast.error(t('manage.productNotFound'));
+      }
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      toast.error(t('manage.scanError'));
+    }
+  };
 
   const handleAddProduct = () => {
     if (!newProductName.trim()) {
-      toast.error('Inserisci il nome del prodotto');
+      toast.error(t('manage.insertProductName'));
       return;
     }
 
     if (newProductTypes.length === 0) {
-      toast.error('Seleziona almeno una lista');
+      toast.error(t('manage.selectAtLeastOneList'));
       return;
     }
 
@@ -41,7 +71,7 @@ const Manage = () => {
     const listNames = newProductTypes.map(t => 
       allCategories.find(c => c.id === t)?.name
     ).join(', ');
-    toast.success(`Prodotto "${newProductName}" aggiunto a ${listNames}`);
+    toast.success(`${t('manage.productAdded')} "${newProductName}" ${t('manage.addedToLists')} ${listNames}`);
     setNewProductName('');
     setNewProductTypes(['mensile']);
   };
@@ -50,26 +80,29 @@ const Manage = () => {
     setEditingProduct(product);
     setEditName(product.name);
     setEditTypes([...product.types]);
+    setEditCustomName(product.custom_name || '');
+    setEditComment(product.comment || '');
+    setEditLocation(product.location || '');
   };
 
   const handleSaveEdit = () => {
     if (!editingProduct) return;
     
     if (!editName.trim()) {
-      toast.error('Inserisci il nome del prodotto');
+      toast.error(t('manage.insertProductName'));
       return;
     }
 
     if (editTypes.length === 0) {
-      toast.error('Seleziona almeno una lista');
+      toast.error(t('manage.selectAtLeastOneList'));
       return;
     }
 
-    updateProduct(editingProduct.id, editName, editTypes);
+    updateProduct(editingProduct.id, editName, editTypes, editCustomName, editComment, editLocation);
     const listNames = editTypes.map(t => 
       allCategories.find(c => c.id === t)?.name
     ).join(', ');
-    toast.success(`Prodotto "${editName}" aggiornato (${listNames})`);
+    toast.success(`${t('manage.productUpdated')} "${editName}" (${listNames})`);
     setEditingProduct(null);
   };
 
@@ -90,9 +123,9 @@ const Manage = () => {
   };
 
   const handleDeleteProduct = (productId: string, productName: string) => {
-    if (confirm(`Sei sicuro di voler eliminare "${productName}"?`)) {
+    if (confirm(`${t('manage.confirmDelete')} "${productName}"?`)) {
       deleteProduct(productId);
-      toast.success('Prodotto eliminato');
+      toast.success(t('manage.productDeleted'));
       setSelectedProducts(prev => {
         const next = new Set(prev);
         next.delete(productId);
@@ -103,7 +136,7 @@ const Manage = () => {
 
   const handleMoveProducts = () => {
     if (selectedProducts.size === 0) {
-      toast.error('Seleziona almeno un prodotto');
+      toast.error(t('manage.selectAtLeastOneProduct'));
       return;
     }
 
@@ -111,7 +144,7 @@ const Manage = () => {
       moveProduct(productId, moveToType);
     });
 
-    toast.success(`${selectedProducts.size} prodotti spostati in ${categories.find(c => c.id === moveToType)?.name}`);
+    toast.success(`${selectedProducts.size} ${t('manage.productsMoved')} ${categories.find(c => c.id === moveToType)?.name}`);
     setSelectedProducts(new Set());
   };
 
@@ -129,7 +162,7 @@ const Manage = () => {
 
   const allCategories = [
     ...categories,
-    { id: 'trasversale' as ShoppingType, name: 'Prodotti Trasversali', description: '', store: '', icon: '🌾' }
+    { id: 'trasversale' as ShoppingType, name: t('category.trasversale.name'), description: '', store: '', icon: '🌾' }
   ];
 
   const filteredProducts = products.filter(p =>
@@ -150,14 +183,14 @@ const Manage = () => {
           onClick={() => navigate('/')}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Torna alla Home
+          {t('manage.backToHome')}
         </Button>
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-2xl md:text-3xl">⚙️ Gestisci Prodotti</CardTitle>
+            <CardTitle className="text-2xl md:text-3xl">⚙️ {t('manage.title')}</CardTitle>
             <CardDescription>
-              Aggiungi nuovi prodotti o sposta quelli esistenti
+              {t('manage.description')}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -167,22 +200,23 @@ const Manage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
-              Aggiungi Nuovo Prodotto
+              {t('manage.addNewProduct')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="product-name">Nome Prodotto</Label>
+              <Label htmlFor="product-name">{t('manage.productName')}</Label>
               <Input
                 id="product-name"
-                placeholder="Es: Miele biologico"
+                placeholder={t('manage.productNamePlaceholder')}
                 value={newProductName}
                 onChange={(e) => setNewProductName(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleAddProduct()}
               />
             </div>
+            <BarcodeScanner onBarcodeDetected={handleBarcodeDetected} />
             <div>
-              <Label>Liste di Spesa</Label>
+              <Label>{t('manage.shoppingLists')}</Label>
               <div className="space-y-2 mt-2">
                 {allCategories.map((cat) => (
                   <div key={cat.id} className="flex items-center space-x-2">
@@ -200,7 +234,7 @@ const Manage = () => {
             </div>
             <Button onClick={handleAddProduct} className="w-full">
               <Plus className="mr-2 h-4 w-4" />
-              Aggiungi Prodotto
+              {t('manage.addProduct')}
             </Button>
           </CardContent>
         </Card>
@@ -211,12 +245,12 @@ const Manage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MoveRight className="h-5 w-5" />
-                Sposta Prodotti Selezionati ({selectedProducts.size})
+                {t('manage.moveProductsCount')} ({selectedProducts.size})
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="move-to-type">Sposta in</Label>
+                <Label htmlFor="move-to-type">{t('manage.moveTo')}</Label>
                 <Select value={moveToType} onValueChange={(value) => setMoveToType(value as ShoppingType)}>
                   <SelectTrigger id="move-to-type">
                     <SelectValue />
@@ -232,14 +266,14 @@ const Manage = () => {
               </div>
               <div className="flex gap-2">
                 <Button onClick={handleMoveProducts} className="flex-1">
-                  Sposta Prodotti
+                  {t('manage.moveProducts')}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => setSelectedProducts(new Set())}
                   className="flex-1"
                 >
-                  Annulla Selezione
+                  {t('manage.cancelSelection')}
                 </Button>
               </div>
             </CardContent>
@@ -249,14 +283,14 @@ const Manage = () => {
         {/* Lista Prodotti */}
         <Card>
           <CardHeader>
-            <CardTitle>📦 Tutti i Prodotti</CardTitle>
+            <CardTitle>📦 {t('manage.allProducts')}</CardTitle>
             <CardDescription>
-              Seleziona prodotti per spostarli o eliminarli
+              {t('manage.selectToMove')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Input
-              placeholder="Cerca prodotto..."
+              placeholder={t('manage.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="mb-4"
@@ -325,16 +359,16 @@ const Manage = () => {
         </Card>
 
         <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
-          <DialogContent>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Modifica Prodotto</DialogTitle>
+              <DialogTitle>{t('manage.editProduct')}</DialogTitle>
               <DialogDescription>
-                Modifica il nome e le liste associate al prodotto
+                {t('manage.editNameAndLists')}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="edit-name">Nome Prodotto</Label>
+                <Label htmlFor="edit-name">{t('manage.productName')}</Label>
                 <Input
                   id="edit-name"
                   value={editName}
@@ -342,7 +376,35 @@ const Manage = () => {
                 />
               </div>
               <div>
-                <Label>Liste di Spesa</Label>
+                <Label htmlFor="edit-custom-name">{t('manage.customName')}</Label>
+                <Input
+                  id="edit-custom-name"
+                  value={editCustomName}
+                  onChange={(e) => setEditCustomName(e.target.value)}
+                  placeholder={t('manage.customName')}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-comment">{t('manage.comment')}</Label>
+                <Textarea
+                  id="edit-comment"
+                  value={editComment}
+                  onChange={(e) => setEditComment(e.target.value)}
+                  placeholder={t('manage.comment')}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-location">{t('manage.location')}</Label>
+                <Input
+                  id="edit-location"
+                  value={editLocation}
+                  onChange={(e) => setEditLocation(e.target.value)}
+                  placeholder={t('manage.location')}
+                />
+              </div>
+              <div>
+                <Label>{t('manage.shoppingLists')}</Label>
                 <div className="space-y-2 mt-2">
                   {allCategories.map((cat) => (
                     <div key={cat.id} className="flex items-center space-x-2">
@@ -360,10 +422,10 @@ const Manage = () => {
               </div>
               <div className="flex gap-2">
                 <Button onClick={handleSaveEdit} className="flex-1">
-                  Salva Modifiche
+                  {t('manage.saveChanges')}
                 </Button>
                 <Button variant="outline" onClick={() => setEditingProduct(null)} className="flex-1">
-                  Annulla
+                  {t('common.cancel')}
                 </Button>
               </div>
             </div>

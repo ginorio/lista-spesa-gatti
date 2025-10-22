@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Product, ShoppingType } from '@/types/shopping';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProductImportListProps {
   recognizedProducts: string[];
@@ -24,6 +25,7 @@ export const ProductImportList = ({
 }: ProductImportListProps) => {
   const [selectedTypes, setSelectedTypes] = useState<Record<string, ShoppingType[]>>({});
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const toggleType = (productName: string, type: ShoppingType) => {
     setSelectedTypes((prev) => {
@@ -46,8 +48,8 @@ export const ProductImportList = ({
     const types = selectedTypes[productName];
     if (!types || types.length === 0) {
       toast({
-        title: "Attenzione",
-        description: "Seleziona almeno un tipo di lista",
+        title: t('manage.insertProductName'),
+        description: t('manage.selectAtLeastOneList'),
         variant: "destructive",
       });
       return;
@@ -69,8 +71,8 @@ export const ProductImportList = ({
         return p;
       });
       toast({
-        title: "Prodotto aggiornato",
-        description: `"${productName}" è stato aggiunto ai nuovi tipi di lista`,
+        title: t('manage.productUpdated'),
+        description: `"${productName}" ${t('photo.addedToLists')}`,
       });
     } else {
       // Create new product
@@ -82,8 +84,8 @@ export const ProductImportList = ({
       };
       products.push(newProduct);
       toast({
-        title: "Prodotto aggiunto",
-        description: `"${productName}" è stato aggiunto alla lista`,
+        title: t('manage.productAdded'),
+        description: `"${productName}" ${t('photo.addedToLists')}`,
       });
     }
 
@@ -137,14 +139,14 @@ export const ProductImportList = ({
     if (addedCount > 0) {
       window.dispatchEvent(new Event('storage'));
       toast({
-        title: "Prodotti aggiunti",
-        description: `${addedCount} prodotti sono stati aggiunti alla lista`,
+        title: t('photo.productsAdded'),
+        description: `${addedCount} ${t('photo.productsAdded')}`,
       });
       onProductsImported();
     } else {
       toast({
-        title: "Attenzione",
-        description: "Seleziona almeno un tipo per ogni prodotto",
+        title: t('auth.error'),
+        description: t('manage.selectAtLeastOneList'),
         variant: "destructive",
       });
     }
@@ -153,9 +155,9 @@ export const ProductImportList = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Prodotti Riconosciuti</h3>
+        <h3 className="font-semibold">{t('photo.recognized')}</h3>
         <Button onClick={handleAddAll} size="sm">
-          Aggiungi Tutti
+          {t('photo.addAll')}
         </Button>
       </div>
 
@@ -169,7 +171,7 @@ export const ProductImportList = ({
                   {productName}
                   {existing && (
                     <span className="text-xs text-muted-foreground ml-2">
-                      (esistente)
+                      ({t('photo.alreadyExists')})
                     </span>
                   )}
                 </span>
