@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Product, ShoppingType } from '@/types/shopping';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useShoppingList } from '@/hooks/useShoppingList';
 
 interface ProductImportListProps {
   recognizedProducts: string[];
-  existingProducts: Product[];
   onProductsImported: () => void;
 }
 
@@ -20,12 +20,12 @@ const categories: { id: ShoppingType; name: string }[] = [
 
 export const ProductImportList = ({
   recognizedProducts,
-  existingProducts,
   onProductsImported,
 }: ProductImportListProps) => {
   const [selectedTypes, setSelectedTypes] = useState<Record<string, ShoppingType[]>>({});
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { products: existingProducts, addProduct, updateQuantity } = useShoppingList();
 
   const toggleType = (productName: string, type: ShoppingType) => {
     setSelectedTypes((prev) => {
@@ -44,7 +44,7 @@ export const ProductImportList = ({
     );
   };
 
-  const handleAddProduct = (productName: string) => {
+  const handleAddProduct = async (productName: string, addToCart: boolean = false) => {
     const types = selectedTypes[productName];
     if (!types || types.length === 0) {
       toast({
@@ -56,44 +56,30 @@ export const ProductImportList = ({
     }
 
     const existing = findExistingProduct(productName);
-    
-    // Get current products from localStorage
-    const stored = localStorage.getItem('shopping-list-products');
-    let products: Product[] = stored ? JSON.parse(stored) : [];
 
     if (existing) {
-      // Update existing product with new types
-      products = products.map((p) => {
-        if (p.id === existing.id) {
-          const mergedTypes = Array.from(new Set([...p.types, ...types]));
-          return { ...p, types: mergedTypes, quantity: Math.max(p.quantity, 1) };
-        }
-        return p;
-      });
       toast({
         title: t('manage.productUpdated'),
         description: `"${productName}" ${t('photo.addedToLists')}`,
       });
+      if (addToCart) {
+        await updateQuantity(existing.id, Math.max(existing.quantity, 1));
+      }
     } else {
-      // Create new product
-      const newProduct: Product = {
-        id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        name: productName,
-        types: types,
-        quantity: 1,
-      };
-      products.push(newProduct);
+      await addProduct(productName, types);
       toast({
         title: t('manage.productAdded'),
         description: `"${productName}" ${t('photo.addedToLists')}`,
       });
+      
+      if (addToCart) {
+        // Find the newly added product and set quantity
+        const newProduct = existingProducts.find(p => p.name === productName);
+        if (newProduct) {
+          await updateQuantity(newProduct.id, 1);
+        }
+      }
     }
-
-    // Save to localStorage
-    localStorage.setItem('shopping-list-products', JSON.stringify(products));
-
-    // Trigger storage event to update other components
-    window.dispatchEvent(new Event('storage'));
 
     // Clear selection for this product
     setSelectedTypes((prev) => {
@@ -103,41 +89,18 @@ export const ProductImportList = ({
     });
   };
 
-  const handleAddAll = () => {
+  const handleAddAll = async () => {
     let addedCount = 0;
     
-    recognizedProducts.forEach((productName) => {
+    for (const productName of recognizedProducts) {
       const types = selectedTypes[productName];
       if (types && types.length > 0) {
-        const stored = localStorage.getItem('shopping-list-products');
-        let products: Product[] = stored ? JSON.parse(stored) : [];
-        const existing = findExistingProduct(productName);
-
-        if (existing) {
-          products = products.map((p) => {
-            if (p.id === existing.id) {
-              const mergedTypes = Array.from(new Set([...p.types, ...types]));
-              return { ...p, types: mergedTypes, quantity: Math.max(p.quantity, 1) };
-            }
-            return p;
-          });
-        } else {
-          const newProduct: Product = {
-            id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            name: productName,
-            types: types,
-            quantity: 1,
-          };
-          products.push(newProduct);
-        }
-
-        localStorage.setItem('shopping-list-products', JSON.stringify(products));
+        await handleAddProduct(productName, false);
         addedCount++;
       }
-    });
+    }
 
     if (addedCount > 0) {
-      window.dispatchEvent(new Event('storage'));
       toast({
         title: t('photo.productsAdded'),
         description: `${addedCount} ${t('photo.productsAdded')}`,
@@ -175,13 +138,24 @@ export const ProductImportList = ({
                     </span>
                   )}
                 </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleAddProduct(productName)}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleAddProduct(productName, false)}
+                    title={t('photo.addProduct')}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="default"
+                    onClick={() => handleAddProduct(productName, true)}
+                    title={t('photo.addToCart')}
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
               <div className="flex gap-4">

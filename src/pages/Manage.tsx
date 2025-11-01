@@ -37,14 +37,12 @@ const Manage = () => {
     toast.info(t('manage.fetchingProduct'));
     try {
       const response = await fetch(
-        `https://world.openfoodfacts.org/api/v2/product/${barcode}?fields=product_name,brands`
+        `https://world.openfoodfacts.org/api/v2/product/${barcode}?fields=product_name`
       );
       const data = await response.json();
       
       if (data.status === 1 && data.product?.product_name) {
-        const productName = data.product.brands 
-          ? `${data.product.brands} - ${data.product.product_name}`
-          : data.product.product_name;
+        const productName = data.product.product_name;
         setNewProductName(productName);
         toast.success(`${t('manage.productAdded')}: ${productName}`);
       } else {

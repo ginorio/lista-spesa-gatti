@@ -148,7 +148,6 @@ const Summary = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <PhotoImport 
-                existingProducts={products} 
                 onProductsAdded={() => window.location.reload()} 
               />
               <Button onClick={() => navigate('/')} className="w-full">
@@ -272,7 +271,6 @@ const Summary = () => {
 
         <div className="mt-8 space-y-3">
           <PhotoImport 
-            existingProducts={products} 
             onProductsAdded={() => window.location.reload()} 
           />
           

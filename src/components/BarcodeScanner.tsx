@@ -17,10 +17,13 @@ export const BarcodeScanner = ({ onBarcodeDetected }: BarcodeScannerProps) => {
   const { t } = useLanguage();
 
   const stopScanning = async () => {
-    if (scannerRef.current && isScanning) {
+    if (scannerRef.current) {
       try {
-        await scannerRef.current.stop();
+        if (isScanning) {
+          await scannerRef.current.stop();
+        }
         scannerRef.current.clear();
+        scannerRef.current = null;
       } catch (error) {
         console.error('Error stopping scanner:', error);
       }
@@ -40,12 +43,12 @@ export const BarcodeScanner = ({ onBarcodeDetected }: BarcodeScannerProps) => {
           qrbox: { width: 250, height: 250 },
           aspectRatio: 1.0,
         },
-        (decodedText) => {
+        async (decodedText) => {
           console.log('Barcode detected:', decodedText);
           toast.success(`${t('manage.barcodeDetected')}: ${decodedText}`);
-          onBarcodeDetected(decodedText);
-          stopScanning();
+          await stopScanning();
           setIsOpen(false);
+          onBarcodeDetected(decodedText);
         },
         (errorMessage) => {
           // Errors are normal during scanning, we can ignore them

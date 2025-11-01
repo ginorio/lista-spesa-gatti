@@ -110,7 +110,6 @@ const Home = () => {
                 {t('home.viewSummary')}
               </Button>
               <PhotoImport
-                existingProducts={products}
                 onProductsAdded={() => {
                   navigate('/summary');
                 }}

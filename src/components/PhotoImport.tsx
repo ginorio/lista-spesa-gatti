@@ -10,11 +10,10 @@ import { ProductImportList } from './ProductImportList';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PhotoImportProps {
-  existingProducts: Product[];
   onProductsAdded: () => void;
 }
 
-export const PhotoImport = ({ existingProducts, onProductsAdded }: PhotoImportProps) => {
+export const PhotoImport = ({ onProductsAdded }: PhotoImportProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recognizedProducts, setRecognizedProducts] = useState<string[]>([]);
@@ -104,7 +103,6 @@ export const PhotoImport = ({ existingProducts, onProductsAdded }: PhotoImportPr
             {recognizedProducts.length > 0 && (
               <ProductImportList
                 recognizedProducts={recognizedProducts}
-                existingProducts={existingProducts}
                 onProductsImported={handleProductsImported}
               />
             )}

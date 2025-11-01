@@ -146,6 +146,8 @@ const translations = {
     'photo.alreadyExists': 'già esiste',
     'photo.addedToLists': 'aggiunto alle liste',
     'photo.productsAdded': 'prodotti aggiunti con successo',
+    'photo.addProduct': 'Aggiungi prodotto',
+    'photo.addToCart': 'Aggiungi alla lista',
 
     // Common
     'common.loading': 'Caricamento...',
@@ -291,6 +293,8 @@ const translations = {
     'photo.alreadyExists': 'already exists',
     'photo.addedToLists': 'added to lists',
     'photo.productsAdded': 'products added successfully',
+    'photo.addProduct': 'Add product',
+    'photo.addToCart': 'Add to shopping list',
 
     // Common
     'common.loading': 'Loading...',
