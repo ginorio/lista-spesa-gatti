@@ -12,11 +12,12 @@ A responsive web app for creating and managing shopping lists by type — monthl
 - Quick product selection by category
 - Cross-list products shared across all lists
 - Full product management with custom names, comments, and store locations
+- **Barcode scanner** with OpenFoodFacts API integration for quick product addition
 - User authentication (Email/Password and Google Sign-In)
-- Cloud database sync via Lovable Cloud
+- Cloud database sync via Lovable Cloud (Supabase)
 - Multi-language support (Italian/English with toggle on homepage)
 - WhatsApp share and PDF export
-- Photo import (OCR) to read printed shopping lists
+- **Photo import (OCR)** to read printed shopping lists and add directly to cart
 - Privacy policy integration for user data protection
 
 Live demo: http://lista-spesa-gatti.lovable.app
@@ -31,7 +32,7 @@ Live demo: http://lista-spesa-gatti.lovable.app
 
 Purpose
 
-This app saves time between “what to buy where” and “how many units I need” — especially if you shop at different stores on different schedules. The OCR import removes the annoyance of rewriting a paper list.
+This app saves time between "what to buy where" and "how many units I need" — especially if you shop at different stores on different schedules. The OCR import removes the annoyance of rewriting a paper list, and the barcode scanner makes adding products quick and accurate.
 
 
 ---
@@ -44,7 +45,7 @@ Products – Filtered by list, search and adjust quantities with +/− buttons.
 
 Summary – Groups by list, includes cross-list products, allows item check-off, share via WhatsApp, and download PDF.
 
-Manage – Add new products, bulk move selected items to another list, edit names or assigned lists, or delete.
+Manage – Add new products, scan barcodes, bulk move selected items to another list, edit names or assigned lists, or delete.
 
 
 Data is now stored in Lovable Cloud (Supabase) with user authentication and automatic sync.
@@ -69,31 +70,40 @@ Core Features
 **Authentication & Cloud Sync**: 
 - User authentication with email/password and Google Sign-In
 - Cloud database sync via Lovable Cloud (Supabase)
-- Automatic migration of local data to cloud on first signup
 - Row-Level Security (RLS) for data privacy
+- Real-time data synchronization across devices
 
 **Product Management**: 
 - Add custom names, comments, and locations to products
-- State management handled by useShoppingList hook
+- **Barcode scanner** using html5-qrcode library
+- OpenFoodFacts API integration for automatic product name retrieval
+- State management handled by useShoppingList hook with Supabase backend
 - Update, toggle, add, move, delete operations with cloud persistence
+- Bulk move products between lists
+- Search and filter products
 
 **Multi-language Support**:
 - Italian and English translations
 - Language toggle on homepage
 - Default language: Italian
+- All UI elements fully translated including categories and messages
 
 **Export & Share**:
 - PDF export: generated via jsPDF, auto-paginated and grouped by list
 - WhatsApp share: creates formatted messages using URL deep-links
+- Shopping list checklist with item completion tracking
 
 **UI & Design**:
 - Tailwind + shadcn/ui components with lucide icons
 - Hash-based routing (HashRouter)
-- Responsive design with dark/light mode support
+- Responsive design with semantic color tokens
+- Accessible form controls and dialogs
 
-**OCR Import**: 
-- PhotoImport component with Gemini API integration
+**OCR Import & Smart Add**: 
+- PhotoImport component with Lovable AI (Gemini) integration
 - Reads printed shopping lists from photos
+- Two-button action: add to product database or add directly to shopping cart
+- Automatic product recognition and category assignment
 
 
 
@@ -112,6 +122,7 @@ Project scaffold: Vite + standard scripts.
 
 Quick Start
 
+```bash
 # Clone
 git clone https://github.com/ginorio/lista-spesa-gatti
 cd lista-spesa-gatti
@@ -127,26 +138,34 @@ npm run build
 
 # Preview production build
 npm run preview
+```
 
 All scripts and dependencies are defined in package.json.
 
 
 ---
 
-Optional Configuration
+Configuration
 
-OCR / AI
+**Lovable Cloud (Required)**
 
-If you enable OCR (Gemini API):
+This project uses Lovable Cloud which provides:
+- Supabase backend automatically configured
+- Edge functions for OCR processing
+- User authentication and database management
+- Environment variables are auto-configured
 
-Create a .env file with your API key (e.g. GEMINI_API_KEY) and reference it in the OCR component.
-The repository is tagged with gemini-api and ocr-recognition, confirming the feature.
+**Edge Functions**:
+- `ocr-products`: Uses Lovable AI (Gemini) to recognize products from photos
+- Automatically deployed when code changes
 
+**Database Tables**:
+- `profiles`: User profile information
+- `user_products`: Product data with RLS policies per user
+- Includes fields: name, types[], quantity, checked, custom_name, comment, location
 
-Supabase (future integration)
-
-There’s a supabase/ folder.
-Currently, data persists via localStorage — Supabase will enable cloud sync and shared archives.
+**External APIs**:
+- OpenFoodFacts API for barcode scanning (no API key required)
 
 
 ---
@@ -163,13 +182,23 @@ Alternatives: works perfectly on Vercel, Netlify, Cloudflare Pages, or GitHub Pa
 
 Roadmap
 
-🗄️ Optional Supabase sync (multi-device, user profiles)
+✅ ~~Cloud sync with Supabase~~ — **Completed**
 
-🔍 Improved search with synonyms & categories
+✅ ~~User authentication~~ — **Completed**
 
-👥 Multi-user list sharing with permissions
+✅ ~~Barcode scanner~~ — **Completed**
 
-📱 Full PWA support (offline-first) — vite-plugin-pwa already included
+✅ ~~Photo OCR import~~ — **Completed**
+
+🔍 Improved search with synonyms & autocomplete
+
+👥 Multi-user list sharing with family permissions
+
+📱 Full PWA support (offline-first with service workers)
+
+🔔 Push notifications for shared lists
+
+🎨 Customizable themes and list layouts
 
 
 Contributing
@@ -195,8 +224,38 @@ Add your license file (MIT recommended for open projects).
 
 ---
 
+Technical Stack
+
+**Frontend**:
+- React 18 + TypeScript
+- Vite for build and dev server
+- Tailwind CSS with semantic design tokens
+- shadcn/ui component library
+- lucide-react icons
+
+**Backend (Lovable Cloud)**:
+- Supabase for database and authentication
+- Edge Functions (Deno) for serverless logic
+- Row-Level Security (RLS) policies
+- Lovable AI for OCR processing
+
+**Key Libraries**:
+- react-router-dom: Navigation
+- html5-qrcode: Barcode scanning
+- jsPDF: PDF generation
+- @supabase/supabase-js: Database client
+- sonner: Toast notifications
+
+**Development**:
+- ESLint for code quality
+- TypeScript for type safety
+- Vite PWA plugin for progressive web app features
+
+---
+
 Notes
 
-The app now uses Lovable Cloud (Supabase) for data persistence and user authentication.
-
-Features include automatic migration from localStorage to cloud storage on first signup.
+- This app is built and deployed on Lovable with full cloud integration
+- All data is stored securely in Supabase with user-level isolation
+- Barcode scanning uses device camera via html5-qrcode library
+- OCR feature powered by Lovable AI (Gemini) through edge functions
