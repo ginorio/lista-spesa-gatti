@@ -15,6 +15,7 @@ A responsive web app for creating and managing shopping lists by type — monthl
 - **Barcode scanner** with OpenFoodFacts API integration for quick product addition
 - User authentication (Email/Password and Google Sign-In)
 - Cloud database sync via Lovable Cloud (Supabase)
+- **Dark/Light mode toggle** for comfortable viewing in any lighting
 - Multi-language support (Italian/English with toggle on homepage)
 - WhatsApp share and PDF export
 - **Photo import (OCR)** to read printed shopping lists and add directly to cart
@@ -97,6 +98,7 @@ Core Features
 - Tailwind + shadcn/ui components with lucide icons
 - Hash-based routing (HashRouter)
 - Responsive design with semantic color tokens
+- **Dark/Light mode toggle** with localStorage persistence
 - Accessible form controls and dialogs
 
 **OCR Import & Smart Add**: 

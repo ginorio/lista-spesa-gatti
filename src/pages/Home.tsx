@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,8 +41,9 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex-1">
+          <div className="flex-1 flex gap-2">
             <LanguageToggle />
+            <ThemeToggle />
           </div>
           <div className="text-center flex-1">
             <p className="text-xs text-muted-foreground">
