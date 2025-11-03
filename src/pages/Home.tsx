@@ -47,7 +47,7 @@ const Home = () => {
           </div>
           <div className="text-center flex-1">
             <p className="text-xs text-muted-foreground">
-              v1.5 - 21/10/2025
+              v1.6 - 03/11/2025
             </p>
             {user && (
               <p className="text-xs text-muted-foreground mt-1">
@@ -67,7 +67,7 @@ const Home = () => {
           </div>
         </div>
         
-        <header className="text-center mb-12">
+        <header className="text-center mb-12 mt-4">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
             🛒 {t('home.title')}
           </h1>
