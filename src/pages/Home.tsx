@@ -45,7 +45,7 @@ const Home = () => {
             <LanguageToggle />
             <ThemeToggle />
           </div>
-          <div className="text-center flex-1">
+          <div className="text-center flex-1 pl-4">
             <p className="text-xs text-muted-foreground">
               v1.6 - 03/11/2025
             </p>
