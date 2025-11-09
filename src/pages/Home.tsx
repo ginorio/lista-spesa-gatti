@@ -47,7 +47,7 @@ const Home = () => {
           </div>
           <div className="text-center flex-1 pl-4">
             <p className="text-xs text-muted-foreground">
-              v1.6 - 03/11/2025
+              v1.7 - 09/11/2025
             </p>
             {user && (
               <p className="text-xs text-muted-foreground mt-1">

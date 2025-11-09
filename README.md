@@ -104,8 +104,10 @@ Core Features
 **OCR Import & Smart Add**: 
 - PhotoImport component with Lovable AI (Gemini) integration
 - Reads printed shopping lists from photos
-- Two-button action: add to product database or add directly to shopping cart
+- Two-button action per product: add to database or add directly to cart
+- **"Add All" button** adds all recognized products to cart with quantity 1
 - Automatic product recognition and category assignment
+- Smart detection of existing products to avoid duplicates
 
 
 
