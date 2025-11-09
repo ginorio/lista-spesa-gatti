@@ -66,19 +66,12 @@ export const ProductImportList = ({
         await updateQuantity(existing.id, Math.max(existing.quantity, 1));
       }
     } else {
-      await addProduct(productName, types);
+      const initialQuantity = addToCart ? 1 : 0;
+      await addProduct(productName, types, initialQuantity);
       toast({
         title: t('manage.productAdded'),
         description: `"${productName}" ${t('photo.addedToLists')}`,
       });
-      
-      if (addToCart) {
-        // Find the newly added product and set quantity
-        const newProduct = existingProducts.find(p => p.name === productName);
-        if (newProduct) {
-          await updateQuantity(newProduct.id, 1);
-        }
-      }
     }
 
     // Clear selection for this product
@@ -95,7 +88,7 @@ export const ProductImportList = ({
     for (const productName of recognizedProducts) {
       const types = selectedTypes[productName];
       if (types && types.length > 0) {
-        await handleAddProduct(productName, false);
+        await handleAddProduct(productName, true);
         addedCount++;
       }
     }

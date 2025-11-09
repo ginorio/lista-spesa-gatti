@@ -136,7 +136,7 @@ export const useShoppingList = () => {
     await syncProduct(newProduct);
   };
 
-  const addProduct = async (name: string, types: ShoppingType[]) => {
+  const addProduct = async (name: string, types: ShoppingType[], initialQuantity: number = 0) => {
     if (!userId) return;
 
     try {
@@ -146,7 +146,7 @@ export const useShoppingList = () => {
           user_id: userId,
           name,
           types,
-          quantity: 0,
+          quantity: initialQuantity,
           checked: false,
         })
         .select()
@@ -163,12 +163,14 @@ export const useShoppingList = () => {
       };
 
       setProducts(prev => [...prev, newProduct]);
+      return newProduct;
     } catch (error: any) {
       toast({
         title: 'Errore',
         description: 'Impossibile aggiungere il prodotto',
         variant: 'destructive',
       });
+      return undefined;
     }
   };
 
